@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Logged In{% endblock %}
+{% block content %}
+<p>Hello! You've logged in as {{ email }}</p>
+<a href="{{ url_for('dashboard') }}" class="btn btn-primary">View Dashboard</a>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keylogger Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Real-Time Keylogger Dashboard</h1>
+    
+    <p><strong>Typed Text:</strong></p>
+    <p>{{ typed_text }}</p>
+
+    <!-- Auto-refresh the page every 2 seconds -->
+    <script>
+        setTimeout(function(){
+            window.location.reload();
+        }, 2000);
+    </script>
+</body>
+</html>
