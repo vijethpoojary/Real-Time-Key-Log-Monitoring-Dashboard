@@ -7,6 +7,7 @@ app = Flask(__name__)
 app.secret_key = "testing"
 
 #Here you can use your local mongoDB connection also
+#we can use Here
 # MongoDB connections
 def MongoDB():
     client = MongoClient("mongodb+srv://admin:Vijeth1234@cluster0.hso09.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
