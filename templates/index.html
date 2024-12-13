@@ -1,32 +1,151 @@
 {% extends "base.html" %}
 {% block title %}Register System{% endblock %}
 {% block content %}
-{% if message %}
-    <div class="alert alert-secondary" role="alert">
-        <p>{{ message }}</p>
+<style>
+    /* Form Styling */
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(120deg, #8e9eab, #eef2f3);
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+    }
+
+    .register-container {
+        background: #ffffff;
+        width: 400px;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .register-container:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .register-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #4a4a4a;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        color: #4a4a4a;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        border: 1px solid #d1d1d1;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #4a90e2;
+        box-shadow: 0 0 8px rgba(74, 144, 226, 0.6);
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 12px 0;
+        background-color: #4a90e2;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+        background-color: #6fb3f7;
+        transform: scale(1.05);
+    }
+
+    .alert {
+        text-align: center;
+        background-color: rgba(255, 224, 230, 0.9);
+        color: #ff4a5b;
+        border: 1px solid #ffbac1;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .form-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .form-footer a {
+        text-decoration: none;
+        color: #4a90e2;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .form-footer a:hover {
+        color: #6fb3f7;
+    }
+</style>
+
+<div class="register-container">
+    <h3>Admin Registration</h3>
+    {% if message %}
+        <div class="alert">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+    <form action="" method="post">
+        <div class="form-group">
+            <label for="Fullname">Full Name</label>
+            <input name="fullname" id="inputFullName" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+            <label for="InputEmail">Email Address</label>
+            <input name="email" id="InputEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+            <label for="InputPassword">Password</label>
+            <input type="password" name="password1" id="InputPassword" placeholder="Enter your password" required>
+        </div>
+        <div class="form-group">
+            <label for="InputPassword2">Repeat Password</label>
+            <input type="password" name="password2" id="InputPassword2" placeholder="Repeat your password" required>
+        </div>
+        <div class="form-group">
+            <label for="AdminID">Admin ID</label>
+            <input name="admin_id" id="AdminID" placeholder="Enter your Admin ID" required>
+        </div>
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <div class="form-footer">
+        <p>Already have an account? <a href="/login">Login Here</a></p>
     </div>
-{% endif %}
-<form action="" method="post">
-    <div class="form-group">
-        <label for="Fullname">Full name</label>
-        <input name="fullname" class="form-control" id="inputFullName" placeholder="Enter full name">
-    </div>
-    <div class="form-group">
-        <label for="InputEmail">Email address</label>
-        <input name="email" class="form-control" id="InputEmail" placeholder="Enter email">
-    </div>
-    <div class="form-group">
-        <label for="InputPassword">Password</label>
-        <input type="password" name="password1" class="form-control" id="InputPassword" placeholder="Password">
-    </div>
-    <div class="form-group">
-        <label for="InputPassword2">Repeat Password</label>
-        <input type="password" name="password2" class="form-control" id="InputPassword2" placeholder="Repeat Password">
-    </div>
-    <div class="form-group">
-        <label for="AdminID">Admin ID</label>
-        <input name="admin_id" class="form-control" id="AdminID" placeholder="Enter Admin ID">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+</div>
 {% endblock %}

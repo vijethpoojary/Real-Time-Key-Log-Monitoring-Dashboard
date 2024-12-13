@@ -2,13 +2,271 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #727272, #9e9e9e);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .navbar {
+        width: 100%;
+        height: 9%;
+        background-color: #333;
+        color: white;
+        display: flex;
+        justify-content: flex-end; 
+        align-items: center;
+        padding: 10px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        font-family: 'Book Antiqua',serif;
+
+    }
+
+    .navbar a {
+        color: white;
+        font-size: 1rem;
+        text-decoration: none; 
+        margin-right: 5%; 
+        cursor: pointer;
+        padding: 10px 20px;
+        transition: color 0.3s;
+        font-weight: bold;
+    }
+
+
+    .navbar a:hover {
+        color: #ac3939;
+    }
+       
+        .container {
+            background: #ffffff1a;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            padding: 20px 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto; 
+            text-align: center;
+            margin-top: 5rem; 
+        }
+
+        .container::-webkit-scrollbar {
+            display: none; 
+        }
+
+        .container {
+            -ms-overflow-style: none; 
+            scrollbar-width: none;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-family: Arial, sans-serif;
+            color: #000000;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #000000;
+        }
+
+        .terms-section {
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .terms-button {
+            background-color: #444;
+            color: white;
+            border: none;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .terms-button:hover {
+            background-color: #ac3939;
+        }
+
+        .terms-content {
+            display: none;
+            background: rgb(253, 253, 253);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #000000;
+        }
+
+        .terms-content label {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .terms-content input {
+            margin-right: 10px;
+        }
+
+        .terms-content button {
+            background: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .terms-content button:hover {
+            background: #d32f2f;
+        }
+
+        #get-download-btn,
+        #download-btn {
+            display: none;
+            background: #4caf50;
+            color: #fff;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+            margin-top: 8.5px;
+        }
+
+        #get-download-btn:hover,
+        #download-btn:hover {
+            background: #388e3c;
+        }
+        
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Welcome, Student</h1>
-    <p>Click the button below to download the keylogger.</p>
-    <a href="{{ url_for('download_keylogger') }}">
-        <button>Download Keylogger</button>
-    </a>
+    <div class="navbar">
+        <a href="/">Home</a>
+    </div>
+    <div class="container">
+        <h1>Welcome, Student</h1>
+        <p>Click the button below to download the keylogger after agreeing to the terms and conditions.</p>
+        
+        <div class="terms-section">
+            <button class="terms-button" onclick="showTerms()">View Terms and Conditions</button>
+        </div>
+
+        <div class="terms-content" id="terms-content">
+            <p>By using this software, you agree to the following:</p>
+            <ul>
+                <li>You will use the software responsibly and for its intended purpose only.</li>
+                <li>You acknowledge that any misuse or unauthorized activity is strictly prohibited.</li>
+                <li>You accept that the software is provided "as is" with no warranties.</li>
+                <li>All activities using the software must comply with applicable laws and regulations.</li>
+                <li>The admin reserves the right to monitor software usage for compliance.</li>
+                <li>You agree to provide explicit consent before installation.</li>
+            </ul>
+            <p>Steps to be followed:</p>
+<ol>
+    <li>Please read the agreement carefully to understand the terms.</li>
+    <li>Check the box labeled "I Agree" to confirm you agree with the terms and conditions.</li>
+    <li>Once confirmed, click the "Download" button to access your file.</li>
+    <li>Go to the Downloads folder on your computer to locate the file.</li>
+    <li>The downloaded file is in ZIP format. Right-click and extract it to get an executable file.</li>
+    <li>Double-click the executable. It will prompt you to enter the following details: 
+        <ul>
+            <li>Admin ID</li>
+            <li>Admin IP</li>
+            <li>Student Name</li>
+            <li>PC Number</li>
+        </ul>
+        (Admin details should be obtained from your administrator.)
+    </li>
+    <li>After entering the details, press **Enter** to start the keylogger. It will run in the background.</li>
+    <li>To stop the executable, press **Ctrl + I** on your keyboard.</li>
+</ol>
+
+            <div>
+                <label>
+                    <input type="checkbox" id="agree-terms" />
+                    I agree to the Terms and Conditions
+                </label>
+            </div>
+            <div class="button-group">
+                <button onclick="cancelTerms()">Cancel</button>
+                <button id="get-download-btn" onclick="showDownload()">Get Keylogger Downloaded</button>
+            </div>
+        </div>
+
+        <a href="{{ url_for('download_keylogger') }}">
+            <button id="download-btn">Download</button>
+        </a>
+    </div>
+    <script>
+        function showTerms() {
+            document.getElementById('terms-content').style.display = 'block';
+        }
+
+        function cancelTerms() {
+            document.getElementById('terms-content').style.display = 'none';
+            document.getElementById('agree-terms').checked = false;
+            document.getElementById('get-download-btn').style.display = 'none';
+            document.getElementById('download-btn').style.display = 'none';
+        }
+
+        document.getElementById('agree-terms').addEventListener('change', function () {
+            document.getElementById('get-download-btn').style.display = this.checked ? 'inline-block' : 'none';
+        });
+
+        function showDownload() {
+            document.getElementById('download-btn').style.display = 'inline-block';
+        }
+
+         //view and scroll// additional
+
+        document.getElementById('agree-terms').addEventListener('change', function () {
+        const getDownloadBtn = document.getElementById('get-download-btn');
+        if (this.checked) {
+            getDownloadBtn.style.display = 'inline-block';
+            // Scroll into view
+            getDownloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            getDownloadBtn.style.display = 'none';
+        }
+    });
+    function showDownload() {
+            const downloadBtn = document.getElementById('download-btn');
+            downloadBtn.style.display = 'inline-block';
+            downloadBtn.scrollIntoView({ behavior: 'smooth' });
+        }
+
+    </script>
 </body>
 </html>

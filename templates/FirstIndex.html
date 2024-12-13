@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Log Monitoring</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #2b305c;
+      overflow: hidden;
+      background: linear-gradient(to right, #727272, #9e9e9e);
+      flex-direction: column;
+    }
+
+    @keyframes flash-bg {
+      0% { background: linear-gradient(to right,  #727272, #9e9e9e); }
+      100% { background: linear-gradient(to left,  #727272, #9e9e9e); }
+    }
+
+    .header {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 10%;
+      display: flex;
+      justify-content: center;  
+      align-items: center;
+      background: #333;
+      text-align: center;
+      padding: 1rem 2rem;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      font-family: 'Book Antiqua', serif;
+      color: #fff;
+    }
+    .header span{
+        text-align: center;
+        margin-left: 34%;
+    }
+
+    .header div {
+      margin-left: auto;
+      display: flex;
+    }
+
+    .header a {
+      font-size: 1rem;
+      color: #fff;
+      margin-right: 22px;
+      text-decoration: none;  
+      cursor: pointer;
+    }
+
+    .header a:hover {
+      text-decoration: none;  
+      color: #9e9e9e;
+    }
+
+    .welcome-message {
+      font-size: 2.5rem;
+      font-family: 'Book Antiqua', serif; 
+      font-weight: bold;
+      color: #f5f5f5;
+      letter-spacing: 3px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      animation: fade-welcome 2s ease-out 1ms forwards;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    @keyframes fade-welcome {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(209, 209, 209, 0.952);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      width: 90%;
+      opacity: 0;
+      transform: rotateY(90deg);
+      animation: rotate-in 1.5s ease-out 2s forwards;
+      margin-top: 100px;
+    }
+
+    @keyframes rotate-in {
+      0% { transform: rotateY(-90deg); opacity: 0; }
+      100% { transform: rotateY(0deg); opacity: 1; }
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      font-size: 18px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      background: #fff;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      animation: button-bounce 0.6s ease-out;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes button-bounce {
+      0% { transform: translateY(0); }
+      20% { transform: translateY(-5px); }
+      40% { transform: translateY(0); }
+      60% { transform: translateY(-3px); }
+      80% { transform: translateY(0); }
+      100% { transform: translateY(-2px); }
+    }
+
+    .btn-student {
+      background: #887e7e;
+      color: #fff;
+    }
+
+    .btn-student:hover {
+      background: #5f85cc;
+    }
+
+    .btn-admin {
+      background: #887e7e;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .btn-admin:hover {
+      background: #ac3939;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      color: #000;
+      
+      margin-bottom: 2rem;
+      text-align: center;
+      line-height: 1.6;
+      font-family: 'Book Antiqua', serif;
+      font-weight: bold;
+    }
+    
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup-content {
+      position: relative;
+      width: 800px;
+      height:350;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 20px;
+      box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      font-weight: bold;
+      color: #ac3939;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: #ac3939;
+    }
+
+    .hidden {
+      display: none;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="header">
+    <span>Real-Time Log Monitoring</span> 
+    <div>
+      <a href="#" onclick="showAboutUs()">About Us</a>
+      <a href="#" onclick="showContact()">Contact Us</a>
+    </div>
+  </div>
+  
+  <div class="welcome-message">Welcome to the keylogger system !!!</div>
+
+  <div class="container">
+    <p class="description">
+      You can choose your role below to either be a <strong style="color: #5f85cc;">Student</strong> or an <strong style="color: #ac3939;">Admin</strong>. Each role has specific features that enhance the security and integrity of your work environment.
+    </p>
+    <div class="button-group">
+      <button class="btn btn-student" onclick="location.href='/student'">Student</button>
+      <button class="btn btn-admin" onclick="location.href='/login'">Admin</button>
+    </div>
+  </div>
+
+  <!-- About Us Popup -->
+  <div class="about-us hidden" aria-hidden="true">
+    <div class="popup-overlay" onclick="closeAboutUs()">
+      <div class="popup-content">
+        <button class="close-btn" onclick="closeAboutUs()">✖</button>
+        <h2>About Us</h2>
+        <p>Our Keylogger Monitoring Software provides a powerful, real-time solution designed to enhance security and accountability across digital environments. Tailored for educational institutions and enterprise settings, our tool enables administrators to monitor user activity discreetly and efficiently. By tracking keystrokes and system actions, we empower admins to ensure fair usage, prevent unauthorized behavior, and uphold the integrity of operations. Whether used to prevent cheating in exams or safeguard organizational workflows, our keylogger software is a trusted ally in maintaining a secure digital ecosystem.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Popup -->
+  <div class="contact hidden" aria-hidden="true">
+    <div class="popup-overlay" onclick="closeContact()">
+      <div class="popup-content">
+        <button class="close-btn" onclick="closeContact()">✖</button>
+        <h2>Contact Us</h2>
+        <p style="color: #000;">Reach us at support <a href="#">poojaryvijeth239@gmail.com</a><br> or call us at <a href="#S">+91 7795113205</a><br> for any queries or support.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showAboutUs() {
+      document.querySelector('.about-us').classList.remove('hidden');
+      document.querySelector('.about-us').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeAboutUs() {
+      document.querySelector('.about-us').classList.add('hidden');
+      document.querySelector('.about-us').setAttribute('aria-hidden', 'true');
+    }
+
+    function showContact() {
+      document.querySelector('.contact').classList.remove('hidden');
+      document.querySelector('.contact').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeContact() {
+      document.querySelector('.contact').classList.add('hidden');
+      document.querySelector('.contact').setAttribute('aria-hidden', 'true');
+    }
+  </script>
+</body>
+</html>

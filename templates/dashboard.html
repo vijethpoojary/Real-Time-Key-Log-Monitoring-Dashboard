@@ -1,35 +1,717 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keylogger Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            font-size: 18px;
-            color: #555;
-        }
-    </style>
-</head>
-<body>
-    <h1>Real-Time Keylogger Dashboard</h1>
-    
-    <p><strong>Typed Text:</strong></p>
-    <p>{{ typed_text }}</p>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keylogger Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/style.css">
 
-    <!-- Auto-refresh the page every 2 seconds -->
-    <script>
-        setTimeout(function(){
-            window.location.reload();
-        }, 2000);
-    </script>
+  <style>
+    body.dark {
+        background-color: #1a202c; 
+        color: #f7fafc; 
+    }
+
+    body.dark .bg-white {
+        background-color: #2d3748;
+    }
+
+    body.dark .text-gray-700 {
+        color: #e2e8f0;
+    }
+
+    body.dark .text-gray-600 {
+        color: #edf2f7;
+    }
+
+    body.dark .bg-blue-500 {
+        background-color: #3182ce; 
+    }
+
+    .sidebar {
+        transition: transform 0.3s ease;
+        transform: translateX(-100%); 
+    }
+
+    .sidebar.visible {
+        transform: translateX(0); 
+    }
+
+    .main-content {
+        transition: margin-left 0.3s ease;
+    }
+
+    .main-content.shifted {
+        margin-left: 256px;
+    }
+
+    .dashboard-header {
+        background-color: #1e1e2f; 
+        color: #00ffcc; 
+    }
+    .student-name, .pc-number {
+    font-size: 0.875rem; 
+    font-weight: bold;
+    color: #4a5568; 
+    word-wrap: break-word; 
+    max-height: 4rem; 
+    overflow-y: auto; 
+    padding-right: 0.5rem; 
+}
+
+.pc-tile {
+    background-color: #1e1e2f;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    height: 8rem; 
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+    padding: 0.5rem 1rem; 
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #00ffcc;
+}
+
+    .pc-tile:hover {
+        background-color: #2a2a3c; 
+    }
+
+    .keystrokes {
+        color: #ffcc00; 
+    }
+
+    .status {
+        font-weight: bold;
+    }
+
+    .text-green-500 {
+        color: #00ff00; 
+    }
+
+    .text-red-500 {
+        color: #ff0000; 
+    }
+
+    .bg-black {
+        background-color: #000000;
+    }
+
+    .bg-gray-800 {
+        background-color: #1a1a1a; 
+    }
+
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        color: #ff0000; 
+        font-size: 24px;
+        cursor: pointer;
+    }
+    #pc-dashboard {
+      z-index: 1000; 
+  }
+ .alert {
+    transition: opacity 0.5s ease;
+    position: fixed; 
+    top: 20px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    z-index: 9999; 
+    background-color: #4797e2; 
+    color: white;
+    padding: 15px 20px; 
+    border-radius: 5px; 
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    width: 500px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+.alert .close-btn {
+    position: absolute;
+    top: -10px; 
+    right: -10px; 
+    background-color: white; 
+    color: #3182ce; 
+    border: 2px solid #3182ce; 
+    border-radius: 50%; 
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px; 
+    cursor: pointer; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+.alert .close-btn:hover {
+    background-color: #ac3939; 
+    color: white;
+}
+
+   
+    .close-button {
+        margin-left: 10px; 
+        background: none;
+        border: none;
+        color: rgb(219, 20, 20); 
+        cursor: pointer;
+    }
+    
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+}
+
+.popup-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    width: 400px;
+    max-height: 70%; 
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 20px;
+    text-align: left;
+}
+
+.close-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    align-self: flex-start;
+}
+
+.close-btn:hover {
+    background-color: #0056b3;
+}
+
+
+.notification-container {
+    flex-grow: 1;
+    overflow-y: auto; 
+    border-top: 1px solid #ddd; 
+    padding-top: 10px;
+}
+
+
+#notificationContainer {
+    padding: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+
+.notification-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+
+.notification-item p {
+    margin: 5px 0;
+}
+
+
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 6px 10px; 
+    font-size: 0.8rem; 
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; 
+    margin-top: 10px; 
+}
+
+
+.delete-btn:hover {
+    background-color: #ff1a1a;
+}
+
+
+#notificationContainer p {
+    font-style: italic;
+    color: #555;
+}
+.highlighted-tile {
+    box-shadow: 0 0 25px 20px rgba(255, 0, 0, 0.95); 
+    border: 5px solid rgba(255, 0, 0, 0.9); 
+    background-color: rgba(255, 50, 50, 0.8); 
+    color: white; 
+    font-size: 1.2em; 
+    animation: pulse 1s infinite; 
+    transition: all 0.3s ease; 
+}
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 30px 25px rgba(255, 0, 0, 0.85);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px 30px rgba(255, 0, 0, 0.9);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 30px 25px rgba(255, 0, 0, 0.85);
+    }
+}
+
+
+  </style>
+
+<script>
+  let currentKeystrokes = {}; 
+
+  function openPopup(pcNumber, studentName) {
+      const pcTile = document.getElementById('pc-dashboard');
+      const pcTitle = document.getElementById('pc-title');
+      const typedTextArea = document.getElementById('typed-text');
+
+      if (pcTile && pcTitle && typedTextArea) {
+          pcTitle.textContent = `PC ${pcNumber} - ${studentName}`;
+
+          pcTile.classList.remove('hidden');
+          typedTextArea.textContent = "";
+          fetchKeystrokesForPC(pcNumber);
+      } else {
+        //   console.error("Popup elements are missing or not properly defined.");
+      }
+  }
+
+  function fetchKeystrokesForPC(pcNumber) {
+      fetch(`/get_keystrokes/${pcNumber}`, { method: 'GET' })
+          .then(response => response.json())
+          .then(data => {
+            const typedTextArea = document.getElementById('typed-text');
+              if (typedTextArea) {
+                  typedTextArea.textContent = data.keystrokes || "No keystrokes yet";
+              }
+          })
+          .catch(error => console.error("Error fetching keystrokes for PC:", error));
+  }
+
+  function startKeystrokeUpdates() {
+      setInterval(() => {
+          fetchKeystrokes(); 
+
+          const pcTile = document.getElementById('pc-dashboard');
+          if (pcTile && !pcTile.classList.contains('hidden')) {
+              const pcTitle = document.getElementById('pc-title').textContent;
+              const pcNumber = pcTitle.split(' ')[1]; 
+              fetchKeystrokesForPC(pcNumber); 
+          }
+      }, 200);
+  }
+
+  function fetchKeystrokes() {
+      fetch('/get_keystrokes', { method: 'GET' })
+          .then(response => response.json())
+          .then(pcData => {
+              if (Array.isArray(pcData)) {
+                  updatePCData(pcData); 
+                //   console.log("Dashboard successfully refreshed");
+              } else {
+                //   console.error("Unexpected response format:", pcData);
+              }
+          })
+          .catch(error => console.error("Error fetching keystrokes:", error));
+  }
+
+
+  function updatePCData(pcData) {
+      pcData.forEach(pc => {
+          const pcTile = document.querySelector(`#pc-${pc.pc_number}`);
+          if (pcTile) {
+              const keystrokesElement = pcTile.querySelector('.keystrokes');
+              const statusElement = pcTile.querySelector('.status');
+              const studentNameElement = pcTile.querySelector('.student-name');
+
+              if (keystrokesElement && statusElement && studentNameElement) {
+                  currentKeystrokes[pc.pc_number] = pc.keystrokes || "No keystrokes yet";
+                  keystrokesElement.textContent = currentKeystrokes[pc.pc_number];
+
+                  studentNameElement.textContent = pc.student_name || "Unknown Student";
+
+                  statusElement.textContent = pc.active ? "Active" : "Inactive";
+                  statusElement.classList.toggle("text-green-500", pc.active);
+                  statusElement.classList.toggle("text-red-500", !pc.active);
+              }
+          }
+      });
+  }
+
+  function closePopup() {
+      const pcTile = document.getElementById('pc-dashboard');
+      if (pcTile) pcTile.classList.add('hidden');
+  }
+
+  function removePC(pcNumber, adminId, event) {
+      event.stopPropagation(); 
+      fetch('/remove_pc', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ admin_id: adminId, pc_number: pcNumber }),
+      })
+          .then(response => {
+              if (response.ok) {
+                  const pcTile = document.getElementById(`pc-${pcNumber}`);
+                  if (pcTile) pcTile.remove();
+                  console.log(`PC ${pcNumber} removed successfully.`);
+              } else {
+                  return response.json().then(data => {
+                      console.error('Error removing PC:', data.error);
+                  });
+              }
+          })
+          .catch(error => console.error('Error:', error));
+  }
+
+  function filterPCs() {
+      const searchInput = document.getElementById('search-input').value.toLowerCase();
+      const pcTiles = document.querySelectorAll('.pc-tile');
+
+      pcTiles.forEach(tile => {
+          const pcNumber = tile.querySelector('.pc-number').textContent.toLowerCase();
+          tile.style.display = pcNumber.includes(searchInput) ? '' : 'none';
+      });
+  }
+
+  function openProfileModal() {
+      const profileModal = document.getElementById('profile-modal');
+      if (profileModal) {
+          profileModal.classList.remove('hidden');
+          fetchLastLoginTime();
+      }
+  }
+
+  function closeProfileModal() {
+      const profileModal = document.getElementById('profile-modal');
+      if (profileModal) profileModal.classList.add('hidden');
+  }
+
+  function toggleTheme() {
+      const body = document.body;
+      const themeToggle = document.getElementById('theme-toggle');
+
+      if (body && themeToggle) {
+          body.classList.toggle('dark');
+          themeToggle.textContent = body.classList.contains('dark') 
+              ? 'Switch to Light Mode' 
+              : 'Switch to Dark Mode';
+      }
+  }
+
+  function fetchLastLoginTime() {
+      fetch('/last_login_time', { method: 'GET' })
+          .then(response => response.json())
+          .then(data => {
+              const lastLoginTimeElement = document.querySelector('#last-login-time');
+              if (lastLoginTimeElement && data.last_login_time) {
+                  const lastLoginDate = new Date(data.last_login_time);
+                  lastLoginTimeElement.innerHTML = `<strong>Last Login:</strong> ${lastLoginDate.toLocaleDateString()} at ${lastLoginDate.toLocaleTimeString()}`;
+              }
+          })
+          .catch(error => console.error('Error fetching last login time:', error));
+  }
+
+  function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const mainContent = document.querySelector('.main-content');
+
+      if (sidebar && mainContent) {
+          sidebar.classList.toggle('visible');
+          mainContent.classList.toggle('shifted');
+      }
+  }
+
+  window.onload = startKeystrokeUpdates;
+
+  function showAlert(message) {
+    // console.log("Showing alert:", message); 
+
+  
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert'; 
+    alertDiv.textContent = message; 
+
+   
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-btn';
+    closeButton.textContent = 'X';  
+
+ 
+    closeButton.onclick = () => {
+        alertDiv.remove();
+        // console.log("Alert removed");  
+    };
+
+    alertDiv.appendChild(closeButton);
+    document.body.appendChild(alertDiv);
+    setTimeout(() => {
+        alertDiv.remove();
+        // console.log("Alert removed (auto)"); 
+    }, 10000);
+}
+
+
+let displayedNotifications = [];
+
+
+function fetchNotifications() {
+    // console.log("Fetching notifications...");
+
+    fetch('/get_notifications', { method: 'GET' })
+        .then(response => {
+            // console.log("Response received:", response.status);
+            return response.json();
+        })
+        .then(data => {
+            // console.log("Fetched notifications:", data);
+
+            data.forEach(notification => {
+                // console.log("Processing notification:", notification);
+                const pcNumber = notification.pc_number;
+
+                // Check if the notification is already displayed
+                const alreadyDisplayed = displayedNotifications.some(n => n._id === notification._id);
+                // console.log(`Notification already displayed: ${alreadyDisplayed}`);
+                if (!alreadyDisplayed) {
+                    displayedNotifications.push(notification);
+                    showAlert(notification.message);
+
+                    // Find the corresponding PC tile
+                    const pcTile = document.querySelector(`#pc-${pcNumber}`);
+                    // console.log("PC Tile found:", pcTile);
+
+                    if (pcTile) {
+                        pcTile.classList.add('highlighted-tile');
+                        // console.log(`Highlighting PC Tile: ${pcNumber}`);
+
+                        // Remove highlight after 5 seconds
+                        // setTimeout(() => {
+                        //     pcTile.classList.remove('highlighted-tile');
+                        //     console.log(`Highlight removed from PC Tile: ${pcNumber}`);
+                        // }, 10000);
+                    } else {
+                        console.warn(`PC Tile not found for PC Number: ${pcNumber}`);
+                    }
+                }
+            });
+
+            renderNotifications(data);
+        })
+        .catch(error => console.error("Error fetching notifications:", error));
+}
+
+function renderNotifications(notifications) {
+    const notificationContainer = document.getElementById('notificationContainer');
+    notificationContainer.innerHTML = ''; 
+
+    if (notifications.length > 0) {
+        notifications.forEach(notification => {
+            const notificationItem = document.createElement('div');
+            notificationItem.className = 'notification-item';
+
+           
+            notificationItem.innerHTML = `
+                <p>${notification.message}</p>
+                <button class="delete-btn" onclick="deleteNotification('${notification._id}')">Delete</button>
+            `;
+            
+          
+            notificationContainer.appendChild(notificationItem);
+        });
+    } else {
+        notificationContainer.innerHTML = '<p>You have no new notifications.</p>';
+    }
+}
+
+
+
+function deleteNotification(notificationId) {
+    // console.log("Deleting notification:", notificationId);
+
+    
+    const url = `/delete_notification/${notificationId}`;
+    // console.log("Sending DELETE request to:", url);
+
+    fetch(url, { method: 'DELETE' })
+        .then(response => {
+            if (response.ok) {
+                // console.log("Notification deleted successfully");
+                displayedNotifications = displayedNotifications.filter(n => n._id !== notificationId); 
+                fetchNotifications(); 
+            } else {
+                // console.error("Failed to delete notification");
+            }
+        })
+        .catch(error => console.error("Error deleting notification:", error));
+}
+
+function toggleNotificationPopup() {
+    const popup = document.getElementById('popupOverlay');
+    popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+
+    if (popup.style.display === 'block') {
+        fetchNotifications();
+    }
+}
+
+setInterval(fetchNotifications, 1000);
+
+</script>
+
+
+</head>
+<body class="font-sans" style="background-color: #9e9e9e;">
+
+  <div class="flex">
+    <aside class="sidebar w-64 h-screen bg-white shadow-md fixed" style="background-color: #727272;">
+      <div class="bg-black text-white py-5 px-5 rounded  focus:outline-none focus:ring-2 focus:ring-red-300" style="font-size: 23px; background-color: rgb(36, 33, 33);" >Admin Dashboard</div>
+      <nav class="mt-5">
+        <a href="#" class="block py-3 px-5 hover:bg-black text-gray-700" onclick="openProfileModal()" style="font-size: 18px;color: white;">View Profile</a>
+        <a href="#" class="block py-3 px-5 hover:bg-black text-gray-700" style="font-size: 18px;color: white;" onclick="toggleNotificationPopup()">Notifications</a>      </nav>
+    </aside>
+
+    <div class="main-content ml-0 w-full">
+      <header class="shadow p-4 flex items-center justify-between" style="background-color: rgb(36, 33, 33);">
+        <button id="hamburger" class="text-gray-700 focus:outline-none hover:bg-blue-100 bg-stone-400" onclick="toggleSidebar()">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
+        <input id="search-input" type="text" placeholder="Search for PC number" onkeyup="filterPCs()" class="w-1/2 ml-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring">
+        <div class="flex items-center space-x-4">
+            <a href="logout" class="text-white hover:text-red-500" style="font-family: 'Book Antiqua',serif;">Logout</a>
+        </div>        
+      </header>
+
+      <main class="p-6">
+        
+        <h2 class="text-2xl font-semibold mb-4">Computers</h2>
+        <div class="grid grid-cols-4 gap-4" id="pc-list">
+            {% for pc in pc_data %}
+                <div id="pc-{{ pc.pc_number }}" class="pc-tile bg-stone-200 shadow rounded-lg h-32 text-xl font-bold text-gray-700 hover:bg-blue-50 cursor-pointer flex flex-col items-start pl-4 pt-2 relative" 
+                    onclick="openPopup('{{ pc.pc_number }}', '{{ pc.student_name }}')">
+                    <!-- Smaller close button (X) -->
+                    <button class="close-button hover:bg-blue-100 text-sm p-1 absolute top-2 right-2" onclick="removePC('{{pc.pc_number }}', '{{ admin_id }}', event)">X</button>
+                    
+                    <!-- Bold Student Name and PC Number -->
+                    <div class="mb-2 text-sm font-bold text-gray-600 student-name">Student Name: {{ pc.student_name }}</div>
+                    <div class="mb-2 text-sm font-bold text-gray-600 pc-number">PC Number: {{ pc.pc_number }}</div>
+                    
+                    {% if pc.active %}
+                        <div class="text-green-500 text-sm status">Status: Active</div>
+                    {% else %}
+                        <div class="text-red-500 text-sm status">Status: Inactive</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        
+        
+      </main>
+    </div>
+  </div>
+  <div class="popup-overlay" id="popupOverlay">
+    <div class="popup-content">
+        <div class="popup-header">
+            <h3>Notifications</h3>
+            <button 
+            class="absolute top-5 right-5 text-gray-500 text-xl font-bold hover:text-red-700 focus:outline-none" 
+            onclick="toggleNotificationPopup()">
+            X
+        </button>        
+        </div>
+        <div id="notificationContainer" class="notification-container">
+            <!-- Notifications will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+
+
+  <div id="pc-dashboard" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-2/3 h-3/4 max-h-[80vh] flex flex-col relative" style="z-index: 1000;">
+    
+      <h2 id="pc-title" class="text-3xl font-semibold mb-4 text-center">PC Dashboard</h2>
+      <div class="bg-black text-white flex-1 p-6 rounded-lg overflow-y-auto">
+        <p id="typed-text" class="text-xl whitespace-pre-wrap text-lg">Loading keystrokes...</p>
+      </div>
+      <div class="mt-4 w-full flex justify-center">
+        <button class="bg-red-500 text-white py-2 px-4 rounded w-full hover:bg-red-900" onclick="closePopup()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="profile-modal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
+    <div class="bg-stone-300 p-6 rounded-lg shadow-lg w-1/2 relative">
+        <button class="close-button hover:bg-blue-100 absolute top-4 right-4 text-lg font-bold" onclick="closeProfileModal()">X</button>
+        <h2 class="text-2xl font-semibold mb-4 text-center">Profile</h2>
+        <div class="mb-2">
+            <strong>Name:</strong> {{ admin_name }}
+        </div>
+        <div class="mb-2">
+            <strong>ID:</strong> {{ admin_id }}
+        </div>
+        <div class="mb-2">
+            <strong>Email:</strong> {{ admin_email }}
+        </div>
+        <div class="mb-2" id="last-login-time">
+            <strong>Last Login:</strong> {{ last_login_time }}
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>

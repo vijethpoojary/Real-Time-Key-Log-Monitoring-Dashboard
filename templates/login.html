@@ -1,24 +1,291 @@
 {% extends "base.html" %}
 {% block title %}Login System{% endblock %}
 {% block content %}
-{% if message %}
-    <div class="alert alert-secondary" role="alert">
-        <p>{{ message }}</p>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to right, #727272, #9e9e9e);
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        overflow: hidden;
+    }
+
+    .login-container {
+        position: absolute;
+        top: calc(50% + 4.5%);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 380px;
+        height: 470px;
+        padding: 30px;
+        border-radius: 12px;
+        background: rgb(247, 246, 246); 
+        backdrop-filter: blur(10px); 
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-container:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .login-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #050505;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-top: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        font-weight: bold;
+        color: #000000;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 6px;
+        background: rgb(221, 212, 196);
+        color: black;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #494848;
+        box-shadow: 0 0 8px #727272;
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 12px 0;
+        background-color: rgba(102, 102, 102, 0.8);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+        background-color: #28a745;
+        transform: scale(1.05);
+    }
+
+    .alert {
+        text-align: center;
+        background-color: rgba(255, 224, 230, 0.9);
+        color: #fa0240;
+        border: 1px solid #fcf8f8;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #ffffff;
+    }
+
+    .register-link a {
+        text-decoration: none;
+        color: #0f0f0f;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .register-link a:hover {
+        color: #2e2c2d00;
+    }
+
+    .navbar {
+        width: 100%;
+        height: 9%;
+        background-color: #333;
+        color: white;
+        display: flex;
+        justify-content: flex-end; 
+        align-items: center;
+        padding: 10px 20px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        font-family: 'Book Antiqua',serif;
+    }
+
+    .navbar a {
+        color: white;
+        font-size: 1rem;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin-left: 20px;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    .navbar a:hover {
+        color: #ac3939;
+    }
+
+   
+    .modal {
+    display: none; 
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); 
+    justify-content: center;
+    align-items: center; 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    padding: 30px; 
+    border-radius: 15px; 
+    width: 60%; 
+    max-width: 800px; 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    font-size: 18px; 
+    line-height: 1.8; 
+}
+
+.modal-content h4 {
+    font-size: 24px; 
+    margin-bottom: 20px; 
+    text-align: center; 
+    color: #333;
+}
+
+.modal-content ul {
+    padding-left: 20px; 
+}
+
+.modal-content li {
+    margin-bottom: 10px; 
+    font-size: 18px; 
+    color: #444;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 32px; 
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #ac3939;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.navbar a[href="#"]:hover {
+    color: green; 
+}
+
+
+
+</style>
+
+<div class="navbar">
+    <a href="#" id="instructionsBtn">Instructions</a>
+    <a href="/">Home</a>
+    
+</div>
+
+<div class="login-container">
+    <h3>Admin Login</h3>
+    {% if message %}
+        <div class="alert">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+    <form action="" method="post">
+        <div class="form-group">
+            <label for="InputEmail">Email Address</label>
+            <input name="email" id="InputEmail" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+            <label for="InputPassword">Password</label>
+            <input type="password" name="password" id="InputPassword" placeholder="Enter your password" required>
+        </div>
+        <div class="form-group">
+            <label for="AdminID">Admin ID</label>
+            <input type="password" name="admin_id" id="AdminID" placeholder="Enter your Admin ID" required>
+        </div>
+        <button type="submit" class="btn">Login</button>
+    </form>
+</div>
+
+<!-- Modal for Instructions -->
+<div id="instructionsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+            <h4>Instructions:</h4>
+            <ul>
+                <li><strong>Admin ID:</strong> The Admin ID is the one you registered with..</li>
+                <li><strong>Login to Dashboard:</strong> After logging in, you will gain access to the dashboard.</li>
+                <li><strong>Refresh the Page:</strong> To view updated PC tiles, ensure you refresh the page after login.</li>
+                <li><strong>Admin IP Address:</strong> Whenever the student opens the executable, it asks for the Admin IP. This is the IP address of the machine where your Flask app is running. 
+                    <ul>
+                        <li>To get the IP address, go to the command prompt and type <code>ipconfig</code>.</li>
+                        <li>If all systems are connected via LAN, use the LAN IP.</li>
+                        <li>If all systems are connected via Wi-Fi, use the Wi-Fi LAN IP.</li>
+                        <li>Ensure all systems are connected to the same network.</li>
+                    </ul>
+                </li>
+            </ul>
+            
+        </div>
     </div>
-{% endif %}
-<form action="" method="post">
-    <div class="form-group">
-        <label for="InputEmail">Email address</label>
-        <input name="email" class="form-control" id="InputEmail" placeholder="Enter email">
-    </div>
-    <div class="form-group">
-        <label for="InputPassword">Password</label>
-        <input type="password" name="password" class="form-control" id="InputPassword" placeholder="Password">
-    </div>
-    <div class="form-group">
-        <label for="AdminID">Admin ID</label>
-        <input name="admin_id" class="form-control" id="AdminID" placeholder="Enter Admin ID">
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+
+<script>
+var modal = document.getElementById("instructionsModal");
+    var btn = document.getElementById("instructionsBtn");
+    var span = document.querySelector(".close");
+
+    btn.onclick = function() {
+        modal.style.display = "flex"; 
+    };
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+</script>
+
 {% endblock %}
+
